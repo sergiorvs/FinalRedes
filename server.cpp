@@ -1,6 +1,4 @@
-/* Server code in C++ */
-// Compilar: g++ -std=c++11 -pthread -o s.exe server.cpp
-//  Ejecutar: ./s.exe
+
  
 #include <sys/types.h>
 #include <sys/socket.h>

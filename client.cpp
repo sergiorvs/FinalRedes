@@ -1,5 +1,3 @@
- /* Client code in C */
- 
  #include <sys/types.h>
  #include <sys/socket.h>
  #include <netinet/in.h>
@@ -9,11 +7,9 @@
  #include <string.h>
  #include <unistd.h>
 
- //Cambiando a C++
  #include <iostream>
  #include <thread>
  using namespace std;
-//COMPILAR g++ client.cpp -std=c++11  -pthread  -o c
 
  struct sockaddr_in stSockAddr;
  int Res;
@@ -70,7 +66,7 @@
 
    stSockAddr.sin_family = AF_INET;
    stSockAddr.sin_port = htons(2102);
-   Res = inet_pton(AF_INET, "192.168.1.44", &stSockAddr.sin_addr);
+   Res = inet_pton(AF_INET, "172.20.10.4", &stSockAddr.sin_addr);
 
    if (0 > Res)
    {
