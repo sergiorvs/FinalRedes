@@ -1,5 +1,5 @@
 
- 
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -19,7 +19,7 @@
 using namespace std;
 
 
-struct sockaddr_in stSockAddr;                
+struct sockaddr_in stSockAddr;
 int SocketFD = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP); //Se trabaja con protocolo TCP Handshaking
 string buffer;
 int n;
@@ -29,19 +29,19 @@ vector<int> iD; /*Vector que recopila id de los clientes conectados*/
 
 void keepAlive()
 {
-    for(int i=0;i<iD.size();i++)
-    {
-      if(0 > iD[i]) {
-        perror("Socket Fuera de Servicio");
-        close(SocketFD);
-        exit(EXIT_FAILURE);
-        int a; cin>>a;
-      }
-      else
-      {
-        cout <<iD[i]<<"  Keep Alive "<<endl;
-      }
+  for(int i=0;i<iD.size();i++)
+  {
+    if(0 > iD[i]) {
+      perror("Socket Fuera de Servicio");
+      close(SocketFD);
+      exit(EXIT_FAILURE);
+      int a; cin>>a;
     }
+    else
+    {
+      cout <<iD[i]<<"  Keep Alive "<<endl;
+    }
+  }
 }
 
 
@@ -49,7 +49,7 @@ void aceptClient(int ConnectFD) {
   do {
 
     //keepAlive();
-    char* buff;    
+    char* buff;
     buff = new char[2]; //El cliente le envia 7, pero solo decide leer los 2 primeros
     n = read(ConnectFD,buff,1);
     if (n < 0) perror("ERROR reading from socket");
@@ -59,21 +59,21 @@ void aceptClient(int ConnectFD) {
     cout<<"El tam del Vector es: "<<iD.size()<<endl;
     for(int i=0;i<iD.size();i++)
     {
-        cout<<"Enviando a Cliente: "<<iD[i]<<" El msg:  "<<buffer<<endl;          
-        n = write(iD[i],buffer.c_str(),buffer.size());
-        if (n < 0) perror("ERROR writing to socket");        
+      cout<<"Enviando a Cliente: "<<iD[i]<<" El msg:  "<<buffer<<endl;
+      n = write(iD[i],buffer.c_str(),buffer.size());
+      if (n < 0) perror("ERROR writing to socket");
     }
     buffer.clear();
-    
 
- } while(buffer != "END");
 
-    shutdown(ConnectFD, SHUT_RDWR);
+  } while(buffer != "END");
 
-    close(ConnectFD); //Cierra el Socket ( Socket : puente para que 2 computadoras se comuniquen remota o localmente) CIERRA la comunicación
+  shutdown(ConnectFD, SHUT_RDWR);
+
+  close(ConnectFD); //Cierra el Socket ( Socket : puente para que 2 computadoras se comuniquen remota o localmente) CIERRA la comunicación
 }
 
-  
+
 
 int main(void)
 {
@@ -103,7 +103,7 @@ int main(void)
     exit(EXIT_FAILURE);
   }
 
-  if(-1 == listen(SocketFD, 10)) 
+  if(-1 == listen(SocketFD, 10))
   {
     perror("error listen failed");
     close(SocketFD);
@@ -111,27 +111,24 @@ int main(void)
   }
 
 
-//Hace que el Servidor siempre escuche
+  //Hace que el Servidor siempre escuche
 
-while(1)
-{
-  int ConnectFD = accept(SocketFD, NULL, NULL);
-  
-  if(0 > ConnectFD) {
-    perror("error accept failed");
-    close(SocketFD);
-    exit(EXIT_FAILURE);
+  while(1)
+  {
+    int ConnectFD = accept(SocketFD, NULL, NULL);
+
+    if(0 > ConnectFD) {
+      perror("error accept failed");
+      close(SocketFD);
+      exit(EXIT_FAILURE);
+    }
+    iD.push_back(ConnectFD);
+
+    char id[1];
+    sprintf(id,"%d",ConnectFD); //De entero a char
+    write(ConnectFD,id,1);      //Luego que el cliente se conecta, el servidor halla su id, y se lo envía.
+
+    //std::thread (keepAlive).detach();  
+    std::thread (aceptClient, ConnectFD).detach();
   }
-  iD.push_back(ConnectFD);
-
-  char id[1];
-  sprintf(id,"%d",ConnectFD); //De entero a char
-  write(ConnectFD,id,1);      //Luego que el cliente se conecta, el servidor halla su id, y se lo envía.
-  
-  //std::thread (keepAlive).detach();  
-  std::thread (aceptClient, ConnectFD).detach();
-}
-
-close(SocketFD);
-return 0;
 }
