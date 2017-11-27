@@ -2,13 +2,14 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <unistd.h>
 
 #include <iostream>
 #include <thread>
+
 using namespace std;
 
 struct sockaddr_in stSockAddr;
@@ -31,7 +32,6 @@ void writeS()
         buffer[0] = id_usuario[0];
         buffer[0] = letra[0];
         n = write(SocketFD, buffer.c_str(),1);
-
     }
 
 }
@@ -48,7 +48,6 @@ void readS()
         cout<<"Yo cliente "<<id_usuario<<" obtuve el sgnte msj: "<<buffer<<endl;
         if (n < 0) perror("ERROR reading from socket");
     }
-
 }
 
 
@@ -64,7 +63,7 @@ int main(void)
 
     stSockAddr.sin_family = AF_INET;
     stSockAddr.sin_port = htons(2102);
-    Res = inet_pton(AF_INET, "172.20.10.7", &stSockAddr.sin_addr);
+    Res = inet_pton(AF_INET, "172.20.10.5", &stSockAddr.sin_addr);
 
     if (0 > Res)
     {
