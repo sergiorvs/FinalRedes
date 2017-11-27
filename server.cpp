@@ -54,7 +54,7 @@ void aceptClient(int ConnectFD) {
     }
 }
 
-int main(void)
+int main()
 {
     /*
     This function creates a socket and specifies communication style style,
@@ -89,9 +89,9 @@ int main(void)
     }
 
     //Hace que el Servidor siempre escuche
-    while(1)
+    while(true)
     {
-        int ConnectFD = accept(SocketFD, NULL, NULL);
+        int ConnectFD = accept(SocketFD, nullptr, nullptr);
 
         if(0 > ConnectFD) {
             perror("error accept failed");

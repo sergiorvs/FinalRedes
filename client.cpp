@@ -32,6 +32,9 @@ void writeS()
         buffer[0] = id_usuario[0];
         buffer[0] = letra[0];
         n = write(SocketFD, buffer.c_str(),1);
+        if (n < 0) {
+            perror("ERROR writing on socket");
+        }
     }
 
 }
@@ -42,16 +45,18 @@ void readS()
         string buffer;
         char* buff;
         buff=new char[1];
-        n = read(SocketFD,buff,1);
+        n = read(SocketFD, buff, 1);
         string aux(buff);
         buffer = aux;  /*El servidor hace broadcast*/
         cout<<"Yo cliente "<<id_usuario<<" obtuve el sgnte msj: "<<buffer<<endl;
-        if (n < 0) perror("ERROR reading from socket");
+        if (n < 0) {
+            perror("ERROR reading from socket");
+        }
     }
 }
 
 
-int main(void)
+int main()
 {
     if (-1 == SocketFD)
     {
